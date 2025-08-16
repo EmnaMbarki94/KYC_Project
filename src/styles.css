@@ -1,0 +1,23 @@
+form div {
+  margin-bottom: 10px;
+}
+
+label {
+  display: inline-block;
+  width: 180px;
+  font-weight: bold;
+}
+
+input {
+  padding: 4px;
+}
+
+table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #f2f2f2;
+}

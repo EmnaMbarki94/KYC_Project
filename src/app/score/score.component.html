@@ -1,0 +1,152 @@
+<!-- risk-form.component.html -->
+<div class="form-container p-5">
+  <h2 class="form-title text-center mb-6">
+    <i class="pi pi-chart-line mr-2"></i> Évaluation du score de risque
+  </h2>
+
+  <!-- Formulaire principal -->
+<form class="form-grid" (ngSubmit)="getRiskScore(riskForm)" #riskForm="ngForm" novalidate>
+
+    <!-- Ligne 1 -->
+<div class="form-group">
+  <label class="form-label">Âge <span class="required">*</span></label>
+  <span class="p-input-icon-left w-full">
+    <i class="pi pi-calendar"></i>
+    <input type="number" pInputText name="age" [(ngModel)]="personne.age" required min="0"
+           placeholder="Ex: 35" class="form-input" />
+  </span>
+</div>
+
+<div class="form-group">
+  <label>Nationalité *</label>
+  <span class="p-input-icon-left w-full">
+    <i class="pi pi-globe"></i>
+    <select name="nationality" [(ngModel)]="personne.nationality" required class="form-input">
+      <option value="" disabled>-- Choisir --</option>
+      <option *ngFor="let nat of nationalities" [value]="nat">{{ nat }}</option>
+    </select>
+  </span>
+</div>
+
+<!-- Ligne 2 -->
+<div class="form-group">
+  <label class="form-label">Genre <span class="required">*</span></label>
+  <span class="p-input-icon-left w-full">
+    <i class="pi pi-users"></i>
+    <select name="gender" [(ngModel)]="personne.gender" required class="form-input">
+      <option value="">-- Choisir --</option>
+      <option value="homme">Homme</option>
+      <option value="femme">Femme</option>
+    </select>
+  </span>
+</div>
+
+<div class="form-group">
+  <label>Activités *</label>
+  <span class="p-input-icon-left w-full">
+    <i class="pi pi-briefcase"></i>
+    <select name="Activites_label" [(ngModel)]="personne.Activites_label" required class="form-input">
+      <option value="" disabled>-- Choisir --</option>
+      <option *ngFor="let act of Activites_labels" [value]="act">{{ act }}</option>
+    </select>
+  </span>
+</div>
+
+<!-- Ligne 3 -->
+<div class="form-group">
+  <label>Produits *</label>
+  <span class="p-input-icon-left w-full">
+    <i class="pi pi-tags"></i>
+    <select name="Produits" [(ngModel)]="personne.Produits" required class="form-input">
+      <option value="" disabled>-- Choisir --</option>
+      <option *ngFor="let act of Produits" [value]="act">{{ act }}</option>
+    </select>
+  </span>
+</div>
+
+<div class="form-group">
+  <label>Relation *</label>
+  <span class="p-input-icon-left w-full">
+    <i class="pi pi-users"></i>
+    <select name="Relation" [(ngModel)]="personne.Relation" required class="form-input">
+      <option value="" disabled>-- Choisir --</option>
+      <option *ngFor="let act of Relations" [value]="act">{{ act }}</option>
+    </select>
+  </span>
+</div>
+
+<!-- Ligne 4 -->
+<div class="form-group">
+  <label>Pays *</label>
+  <span class="p-input-icon-left w-full">
+    <i class="pi pi-flag"></i>
+    <select name="Pays" [(ngModel)]="personne.Pays" required class="form-input">
+      <option value="" disabled>-- Choisir --</option>
+      <option *ngFor="let act of Pays" [value]="act">{{ act }}</option>
+    </select>
+  </span>
+</div>
+
+<div class="form-group">
+  <label class="form-label">Est PEP ? <span class="required">*</span></label>
+  <span class="p-input-icon-left w-full">
+    <i class="pi pi-exclamation-triangle"></i>
+    <select name="isPEP" [(ngModel)]="personne.isPEP" required class="form-input">
+      <option [ngValue]="false">Non</option>
+      <option [ngValue]="true">Oui</option>
+    </select>
+  </span>
+</div>
+
+<!-- Ligne 5 -->
+<div class="form-group">
+  <label>famCode *</label>
+  <span class="p-input-icon-left w-full">
+    <i class="pi pi-code"></i>
+    <select name="famCode" [(ngModel)]="personne.famCode" required class="form-input">
+      <option value="" disabled>-- Choisir --</option>
+      <option *ngFor="let code of famCodes" [value]="code">{{ code }}</option>
+    </select>
+  </span>
+</div>
+
+<div class="form-group">
+  <label>Voie de distribution *</label>
+  <span class="p-input-icon-left w-full">
+    <i class="pi pi-sitemap"></i>
+    <select name="VoieDeDistribution" [(ngModel)]="personne.VoieDeDistribution" required class="form-input">
+      <option value="" disabled>-- Choisir --</option>
+      <option *ngFor="let voie of VoieDeDistributions" [value]="voie">{{ voie }}</option>
+    </select>
+  </span>
+</div>
+
+
+    <div class="form-actions mt-4">
+    <button pButton type="submit" icon="pi pi-check" 
+            [disabled]="riskForm.invalid || isLoading" 
+            class="submit-button">
+      Obtenir le score de risque
+    </button>
+  </div>
+</form>
+
+<div *ngIf="riskResult" class="mt-5 p-4 bg-gray-100 rounded-lg">
+  <h3 class="text-lg font-bold mb-2">Résultat du score de risque</h3>
+  <p><strong>Risque principal :</strong> {{ riskResult.main_risk }}</p>
+  
+  <div *ngIf="riskResult.risk_percentages">
+    <h4 class="mt-3 mb-1">Détails par catégorie :</h4>
+    <ul>
+      <li *ngFor="let key of riskKeys()">
+        {{ key }} : {{ riskResult.risk_percentages[key] }}%
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- Erreur -->
+<div *ngIf="erreur" class="mt-3 p-3 bg-red-200 text-red-800 rounded">
+  {{ erreur }}
+</div>

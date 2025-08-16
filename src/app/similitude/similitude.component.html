@@ -1,0 +1,195 @@
+<div class="form-container p-5">
+  <!-- Titre centré avec icône -->
+  <h2 class="form-title text-center mb-6">
+    <i class="pi pi-plus-circle mr-2"></i>Ajouter une nouvelle règle KYC
+  </h2>
+
+  <!-- Formulaire style "Connect With Us" -->
+  <form class="form-grid">
+    <!-- Ligne 1 - Nom et Type -->
+    <div class="form-group">
+      <label for="nom" class="form-label">Nom <span class="required">*</span></label>
+      <input id="nom" type="text" pInputText [(ngModel)]="nouvelleRegle.nom" name="nom" 
+             class="form-input" placeholder="Ex: Règle standard">
+    </div>
+
+    <div class="form-group">
+      <label for="type" class="form-label">Type <span class="required">*</span></label>
+      <input id="type" type="text" pInputText [(ngModel)]="nouvelleRegle.type" name="type" 
+             class="form-input" placeholder="Standard, Avancé, etc.">
+    </div>
+
+    <!-- Section Coefficients -->
+    <div class="section-title">
+      <span class="section-icon">⚙️</span>
+      <span class="section-text">Coefficients</span>
+    </div>
+
+    <!-- Coefficients en grille 2 colonnes -->
+    <div *ngFor="let champ of champsCoefs" class="form-group">
+      <label [for]="champ.key" class="form-label">{{ champ.label }}</label>
+      <input [id]="champ.key" type="number" pInputText [(ngModel)]="nouvelleRegle[champ.key]" 
+             [name]="champ.key" min="0" max="100" class="form-input">
+    </div>
+
+    <!-- Seuil -->
+    <div class="form-group">
+      <label for="seuil_similitude" class="form-label">Seuil de similitude (%) <span class="required">*</span></label>
+      <input id="seuil_similitude" type="number" pInputText [(ngModel)]="nouvelleRegle.seuil_similitude" 
+             name="seuil_similitude" min="0" max="100" class="form-input">
+    </div>
+
+    <!-- Boutons centrés -->
+    <div class="form-actions">
+      <button pButton type="button" label="Ajouter la règle" 
+              class="submit-button" (click)="addRegle()"></button>
+      <button pButton label="Vérifier un client" 
+              class="secondary-button" [routerLink]="['/verification']"></button>
+    </div>
+
+    <!-- Message d'erreur -->
+    <p *ngIf="errorMessage()" class="error-message">
+      <i class="pi pi-exclamation-circle mr-2"></i>{{ errorMessage() }}
+    </p>
+  </form>
+</div>
+
+<!-- Tableau simplifié -->
+<div class="table-container" *ngIf="regles.length > 0">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Type</th>
+        <th>Coef Nom</th>
+        <th>Coef Prénom</th>
+        <th>Coef Date Naissance</th>
+        <th>Coef Nationalité</th>
+        <th>Coef Résidence</th>
+        <th>Seuil</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let regle of regles">
+        <td>{{ regle.nom }}</td>
+        <td>{{ regle.type }}</td>
+        <td>{{ regle.coef_nom }}</td>
+        <td>{{ regle.coef_prenom }}</td>
+        <td>{{ regle.coef_date_naissance }}</td>
+        <td>{{ regle.coef_nationalite }}</td>
+        <td>{{ regle.coef_residence }}</td>
+        <td>{{ regle.seuil_similitude }}%</td>
+        <td>
+          <button class="toggle-button" 
+                  [class.active]="regle.active"
+                  (click)="toggleActivation(regle)">
+            {{ regle.active ? 'Désactiver' : 'Activer' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- CSS personnalisé pour correspondre exactement au design -->
+<style>
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.form-title {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #4299e1;
+}
+
+.section-title {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.section-icon {
+  margin-right: 0.5rem;
+}
+
+.required {
+  color: #e53e3e;
+}
+
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.submit-button {
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.secondary-button {
+  background-color: #e2e8f0;
+  color: #4a5568;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.error-message {
+  grid-column: 1 / -1;
+  color: #e53e3e;
+  background-color: #fff5f5;
+  padding: 0.75rem;
+  border-radius: 6px;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+</style>
